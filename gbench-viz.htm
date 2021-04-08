@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<html>
+
+<head>
+    <title>gBench viz</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style type="text/css">
+        body,
+        html {
+            height: 100%;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .drop {
+            text-align: center;
+            min-height: 99%;
+        }
+        
+        #title {
+            font-size: x-large;
+            font-weight: bolder;
+            text-align: center;
+            letter-spacing: 3px;
+            color: #f27173;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 40vh;
+            width: 80vw;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+    <script type="text/javascript" src="./chart.min.js"></script>
+</head>
+
+<body>
+    <div id="title"></div>
+    <div id="drop-area" class="drop">
+        <span id="info">drop file data here</span>
+        <div class="chart-container"><canvas id="chart"></canvas></div>
+    </div>
+    <script>
+        let myChart;
+        const colors = [
+            "#FF8F80", "#FF9F80", "#FFAF80", "#FFBF80", "#FFCF80", "#FFDF80",
+            "#FFEF80", "#FFFF80", "#EFFF80", "#DFFF80", "#CFFF80", "#BFFF80",
+            "#AFFF80", "#9FFF80", "#8FFF80", "#80FF80", "#80FF8F", "#80FF9F",
+            "#80FFAF", "#80FFBF", "#80FFCF", "#80FFDF", "#80FFEF", "#80FFFF",
+            "#80EFFF", "#80DFFF", "#80CFFF", "#80BFFF", "#80AFFF", "#809FFF",
+            "#808FFF", "#8080FF", "#8F80FF", "#9F80FF", "#AF80FF", "#BF80FF",
+            "#CF80FF", "#DF80FF", "#EF80FF", "#FF80FF", "#FF80EF", "#FF80DF",
+            "#FF80CF", "#FF80BF", "#FF80AF", "#FF809F", "#FF808F", "#FF8080",
+        ];
+        const dropArea = document.getElementById("drop-area");
+
+        dropArea.addEventListener("dragover", (event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            event.dataTransfer.dropEffect = "copy";
+            dropArea.style.border = "2px dashed #ff6961";
+        });
+
+        dropArea.addEventListener("dragleave", (event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            dropArea.style.border = "none";
+        });
+
+        dropArea.addEventListener("drop", (event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            const fileList = event.dataTransfer.files;
+            const reader = new FileReader();
+            reader.addEventListener("load", (event) => {
+                genChart(event.target.result);
+            });
+            reader.readAsDataURL(fileList[0]);
+            dropArea.style.border = "none";
+        });
+
+        function genChart(val) {
+            let data;
+            try {
+                data = JSON.parse(atob(val.split(";base64,")[1]));
+            } catch (e) {
+                alert("Not a valid data file");
+                return null;
+            }
+
+            if (!data.benchmarks) {
+                alert("Not a Google benchmark json file");
+                return null;
+            }
+
+            document.getElementById("title").innerHTML = "";
+            document.getElementById("info").innerHTML = "";
+
+            let labels = [];
+            let datas = [];
+            let barColors = [];
+            let tu;
+
+            let ctx = document.getElementById("chart").getContext("2d");
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+            data.benchmarks.forEach((el) => {
+                if (!tu) {
+                    tu = el.time_unit;
+                }
+                labels.push(el.name + "\r\n(" + el.iterations + " iters)");
+                datas.push(el.cpu_time);
+                let c = colors[Math.floor(Math.random() * colors.length)];
+                while (barColors.findIndex(e => e === c) >= 0) {
+                    c = colors[Math.floor(Math.random() * colors.length)];
+                }
+                barColors.push(c);
+            });
+
+            if (myChart) {
+                myChart.destroy();
+            }
+
+            myChart = new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "Time in " + tu,
+                        data: datas,
+                        backgroundColor: barColors,
+                    }, ],
+                },
+                options: {
+                    animation: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                        },
+                    },
+                },
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,88 @@
+{
+  "context": {
+    "date": "2021-04-08T08:58:13+02:00",
+    "host_name": "debdev",
+    "executable": "/home/thierry/Dev/cpp/build-Release/bin/gbenchstring",
+    "num_cpus": 2,
+    "mhz_per_cpu": 1992,
+    "cpu_scaling_enabled": false,
+    "caches": [
+      {
+        "type": "Data",
+        "level": 1,
+        "size": 32768,
+        "num_sharing": 1
+      },
+      {
+        "type": "Instruction",
+        "level": 1,
+        "size": 32768,
+        "num_sharing": 1
+      },
+      {
+        "type": "Unified",
+        "level": 2,
+        "size": 262144,
+        "num_sharing": 1
+      },
+      {
+        "type": "Unified",
+        "level": 3,
+        "size": 8388608,
+        "num_sharing": 1
+      }
+    ],
+    "load_avg": [0.29,0.33,0.45],
+    "library_build_type": "release"
+  },
+  "benchmarks": [
+    {
+      "name": "toLower",
+      "run_name": "toLower",
+      "run_type": "iteration",
+      "repetitions": 0,
+      "repetition_index": 0,
+      "threads": 1,
+      "iterations": 9430467,
+      "real_time": 6.1444594313306062e+01,
+      "cpu_time": 6.1102393868723574e+01,
+      "time_unit": "ns"
+    },
+    {
+      "name": "toLowerChar",
+      "run_name": "toLowerChar",
+      "run_type": "iteration",
+      "repetitions": 0,
+      "repetition_index": 0,
+      "threads": 1,
+      "iterations": 13076262,
+      "real_time": 6.9834571607685945e+01,
+      "cpu_time": 6.1964128663069005e+01,
+      "time_unit": "ns"
+    },
+    {
+      "name": "toLowerPtr",
+      "run_name": "toLowerPtr",
+      "run_type": "iteration",
+      "repetitions": 0,
+      "repetition_index": 0,
+      "threads": 1,
+      "iterations": 34526924,
+      "real_time": 2.1091286875131075e+01,
+      "cpu_time": 2.0169971961591489e+01,
+      "time_unit": "ns"
+    },
+    {
+      "name": "toLowerPtr2",
+      "run_name": "toLowerPtr2",
+      "run_type": "iteration",
+      "repetitions": 0,
+      "repetition_index": 0,
+      "threads": 1,
+      "iterations": 19711373,
+      "real_time": 4.3248827872126419e+01,
+      "cpu_time": 4.2543324252450603e+01,
+      "time_unit": "ns"
+    }
+  ]
+}
